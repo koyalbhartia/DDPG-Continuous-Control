@@ -1,10 +1,8 @@
-Impelementation of DDPG Reinforcement algorithm for Reacher problem.
-In this environment, a double-jointed arm can move to target locations.
+Impelementation of DDPG Reinforcement algorithm for Reacher problem where a double-jointed arm is made to move to target locations.
 
 In this project the second verison of the problem has been solved which contains 20 identical agents, each with its own copy of the environment.
 The barrier here is to take into account the presence of many agents. 
 
-The environment is considered solved, when the average (over 100 episodes) of those average scores is at least +30. In the case of the plot above, the environment was solved at episode 63, since the average of the average scores from episodes 64 to 163 (inclusive) was greater than +30.
 
 Details of environment :
 ```
@@ -23,20 +21,13 @@ Thus, the goal of your agent is to maintain its position at the target location 
 After each episode, we add up the rewards that each agent received (without discounting), to get a score for each agent. This yields 20 (potentially different) scores. We then take the average of these 20 scores.
 This yields an average score for each episode (where the average is over all 20 agents).
 
-## Solving criterias of the problem. 
-
-### Option 1: Solve the First Version
-The task is episodic, and in order to solve the environment, your agent must get an average score of +30 over 100 consecutive episodes.
-
-### Option 2: Solve the Second Version
-The barrier for solving the second version of the environment is slightly different, to take into account the presence of many agents. In particular, your agents must get an average score of +30 (over 100 consecutive episodes, and over all agents). Specifically,
-
-After each episode, we add up the rewards that each agent received (without discounting), to get a score for each agent. This yields 20 (potentially different) scores. We then take the average of these 20 scores.
-This yields an average score for each episode (where the average is over all 20 agents).
-
 
 ### Neural Network details :
-
+The neural network architecture consists of teh following layers:
+1. An input layer of 33 neurons.
+2. Hidden layer with 256 neurons
+3. Hidden layer with 128 neurons
+4. Output layer of 4 neurons 
 
 ### Agent details :
 ```
@@ -50,32 +41,39 @@ WEIGHT_DECAY = 0        # L2 weight decay
 
 ```
 
-1. We have class of Ring buffer with deque of tuple [State , Action , Reward , Next state , Done ]
-2. Optimizer used for back propagation is Adams.
-3. We are using Relu after every fully connveted layer.
-4. We are adding actions in the critic network with the second hidden layer.
-5. Two networks are maintained for each Actor and Critic in order to have a smooth learnings.
-6. We use Tau parameter to update the network slowly so that we so not overshoot in gradient descent and function learned by the neural network is better.
-
-### DDPG algorithm.
+### DDPG parameters.
 ```
 number of episodes=1000, 
 Maximum time step per episode =1000,
 ```
+### Implementation
+
+1. Two networks are maintained for each Actor and Critic in order to have a smooth learnings.
+2. Actor-Critic model is employed in which the Critic model learns the value function and uses it to determine how the Actor’s policy based model should change.
+3. The Actor brings the advantage of learning in continuous actions space without the need for extra layer of optimization procedures required in a value based function while the Critic supplies the Actor with knowledge of the performance.
+4. The learning rate for both Actor and Critic is 1e-3 with soft update of target set to the same 1e-3. 
+5. A Replay buffer maintains the tuple [State , Action , Reward , Next state , Done ]
+6. Optimizer used for back propagation is Adams.
+7. Relu is used after every fully connveted layer.
+8. We are adding actions in the critic network with the second hidden layer.
+10. We use Tau parameter to update the network slowly so that we so not overshoot in gradient descent and function learned by the neural network is better.
+
 
 ## Final Results :
 
+![Episode_score_graph](https://user-images.githubusercontent.com/40532456/124653238-aae18600-de62-11eb-88f1-8561e1d97ed7.png)
+
+Below is the output of how the Avg Reward converged vs Episode number post 100 episodes.
+
+![Episode_reward](https://user-images.githubusercontent.com/40532456/124653488-fa27b680-de62-11eb-8060-513294685417.png)
 
 
-
-**The game has been solved with a +30 score on an average of 100 episodes in 112 episodes.**
+**The game has been solved with a +30 score on an average of 100 episodes at 112 episodes.**
 
 
 ### Ideas to improve on the results.
-1.We can try reducing the network height and depth to check if we can solve the problem with less weight hence less data.
-
-2. If we do not have constraint of computation I will also like to try genetic algorithm and see if we can get better results I doubt it will be the case but it is a good idea to try and understand the results.
-
-3. PPO can be tried on this problem and compaired with A2C.
-
-4. This can be a good problem to impelement with standard impelementations for RL algorithms showed in the lectures.
+1. Different replay buffers can be used for different agents
+2. Prioritization of replay buffers.
+3. PPO will be a good algotihm to try in this case.
+4. Batch size of Replay BUffer can be increased to increase success of learning.
+5. We can play with the number of time steps to have a good balance between exploitation and exploration.
