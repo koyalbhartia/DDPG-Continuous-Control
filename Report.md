@@ -23,11 +23,22 @@ This yields an average score for each episode (where the average is over all 20 
 
 
 ### Neural Network details :
+
+#### Actor Network
+
 The neural network architecture consists of teh following layers:
 1. An input layer of 33 neurons.
 2. Hidden layer with 256 neurons
 3. Hidden layer with 128 neurons
 4. Output layer of 4 neurons 
+
+#### Critic Network
+
+The neural network architecture consists of teh following layers:
+1. An input layer of 33 neurons.
+2. Hidden layer with 256 + 4 action neurons = 260 neurons
+3. Hidden layer with 128 neurons
+4. Output layer of 1 neuron 
 
 ### Agent details :
 ```
